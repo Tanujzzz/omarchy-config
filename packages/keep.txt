@@ -6,6 +6,7 @@ repo:nano
 repo:discord
 repo:spotify
 repo:vlc
+repo:hypridle
 aur:zen-browser-bin
 aur:visual-studio-code-bin
 # Confirmed keeps (already in omarchy-base, listed to prevent pruning):
