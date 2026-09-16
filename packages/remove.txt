@@ -1,0 +1,14 @@
+# Prune candidates — removed ONLY if installed AND dependency-clean
+# (pacman -Qi "Required By" empty and not Omarchy-critical). Otherwise SKIP + warn.
+# mpv is expected to SKIP (required by mpv-mpris).
+mpv
+obs-studio
+kdenlive
+pinta
+xournalpp
+# Added 2026-09-15: Omarchy toys + gaming client + redundant terminal
+omacut
+tensaku
+cliamp
+moonlight-qt
+foot

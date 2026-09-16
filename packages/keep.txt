@@ -1,0 +1,14 @@
+# Must-have + confirmed keeps. Format: "<repo>:<package>" (repo = pacman/official incl. omarchy repo, aur = yay)
+repo:kitty
+repo:fish
+repo:fastfetch
+repo:nano
+repo:discord
+repo:spotify
+repo:vlc
+aur:zen-browser-bin
+aur:visual-studio-code-bin
+# Confirmed keeps (already in omarchy-base, listed to prevent pruning):
+# libreoffice-fresh, evince, obsidian, docker, docker-compose, lazydocker,
+# localsend, ufw, printing (cups), mise, lazygit, tmux, btop, fzf, ripgrep,
+# bat, eza, zoxide, tldr, nvim
