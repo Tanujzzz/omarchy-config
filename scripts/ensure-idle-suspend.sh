@@ -12,7 +12,7 @@ set -euo pipefail
 
 if [[ "${1:-}" == "--dry-run" ]]; then export DRY_RUN=1; fi
 DRY_RUN="${DRY_RUN:-0}"
-IDLE_SUSPEND_SEC="${IDLE_SUSPEND_SEC:-1800}"
+IDLE_SUSPEND_SEC="${IDLE_SUSPEND_SEC:-900}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIVE=~/.config/hypr/hypridle.conf
 TEMPLATE="$REPO_DIR/config/hypr/hypridle.conf"
@@ -37,6 +37,7 @@ fi
 
 TMP="$(mktemp)"
 sed "s/__IDLE_SUSPEND_SEC__/$IDLE_SUSPEND_SEC/g" "$TEMPLATE" >"$TMP"
+CHANGED=0
 if [[ -f "$LIVE" ]] && cmp -s "$TMP" "$LIVE"; then
   echo "==> hypridle.conf already current (suspend after ${IDLE_SUSPEND_SEC}s idle), skipping write"
   rm -f "$TMP"
@@ -48,6 +49,7 @@ else
   [[ -f "$LIVE" ]] && cp "$LIVE" "$LIVE.bak.$(date +%s)"
   cp "$TMP" "$LIVE"
   rm -f "$TMP"
+  CHANGED=1
   echo "==> hypridle.conf written (suspend after ${IDLE_SUSPEND_SEC}s idle)"
 fi
 
@@ -56,7 +58,12 @@ if [[ "$DRY_RUN" == "1" ]]; then
   exit 0
 fi
 
+# hypridle does not hot-reload its config: a changed file needs a restart
+# to take effect; otherwise enable --now is a no-op on the running service.
 systemctl --user enable --now hypridle.service
+if (( CHANGED )); then
+  systemctl --user restart hypridle.service
+fi
 sleep 1
 if [[ "$(systemctl --user is-active hypridle.service)" != "active" ]]; then
   echo "hypridle.service failed to start:"

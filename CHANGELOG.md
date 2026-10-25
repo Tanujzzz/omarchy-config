@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-17 — idle suspend timeout 30 min → 15 min
+- First idle test showed screen off but CPU on — but 30 min had not elapsed,
+  so that was the pre-suspend lock state, not a failed suspend.
+- Default `IDLE_SUSPEND_SEC` 1800 → 900 in `scripts/ensure-idle-suspend.sh`;
+  applied live (`timeout = 900`, service restarted).
+- Robustness fix in the script: hypridle does not hot-reload its config, so
+  a changed `hypridle.conf` now triggers `systemctl --user restart
+  hypridle.service` (previously `enable --now` was a no-op on the running
+  service and the new timeout would not have taken effect).
+
 ## 2026-09-16 — idle auto-suspend fix
 - Symptom: manual menu suspend worked (screen + CPU off), but idle timeout
   only blanked the screen while the CPU kept running.
