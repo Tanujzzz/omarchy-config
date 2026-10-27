@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-10-27 — approved development tools and connectivity
+- Added only the approved packages: kdeconnect, php, composer, php-sqlite,
+  xdebug, mkcert, ddev-bin, and orca-ide-bin. `ensure-apps.sh` now reads
+  `packages/keep.txt`; `:latest` entries query current package candidates on
+  reruns as well as fresh installs. Existing entries retain install-if-missing
+  behavior. No release numbers are pinned.
+- Added `ensure-development.sh`: a dedicated PHP extension/Xdebug drop-in
+  (avoids duplicate extension declarations), floating `node@latest` via Mise,
+  Docker service/group readiness, and mkcert system trust. Verifies Composer,
+  PHP, Node/npm and DDEV; creates no DDEV/Drupal projects, databases or containers.
+- Added `ensure-connectivity.sh`: KDE Connect TCP/UDP 1714–1764 UFW rules;
+  device pairing remains interactive. Does not enable an inactive firewall.
+- Added `ensure-plugins.sh`: Instrument Cluster and OmaConnect from their
+  upstream default branches, with validation and fast-forward updates.
+  Previously copied plugin directories are backed up before migration to git.
+  Only the clock/center anchor and missing OmaConnect bar entry are configured;
+  existing layout, theme, idle settings and other plugins are preserved.
+- Guarded stale terminal launcher cleanup during dry-run so previewing these
+  additions does not delete launchers. Added isolated regression checks for
+  configuration preservation, repeat runs, package scope and dry-run behavior.
+- Repository changes only; the live installer was not executed during this update.
+
 ## 2026-09-17 — idle suspend timeout 30 min → 15 min
 - First idle test showed screen off but CPU on — but 30 min had not elapsed,
   so that was the pre-suspend lock state, not a failed suspend.

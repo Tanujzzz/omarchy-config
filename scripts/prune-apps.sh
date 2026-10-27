@@ -37,6 +37,10 @@ done <"$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/packages/remove.txt"
 # once the binary is gone and it isn't the active default)
 for term in foot alacritty; do
   if ! command -v "$term" &>/dev/null; then
-    rm -f ~/.local/share/applications/"$term".desktop
+    if [[ "$DRY_RUN" == "1" ]]; then
+      echo "[dry-run] remove stale launcher: $HOME/.local/share/applications/$term.desktop"
+    else
+      rm -f ~/.local/share/applications/"$term".desktop
+    fi
   fi
 done

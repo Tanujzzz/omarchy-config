@@ -119,3 +119,27 @@ Pattern: `hl.unbind` existing first, then `o.bind`. Validate every change with
 - `hyprctl reload && hyprctl configerrors` clean after P5.
 - `omarchy restart terminal`; Zen default check; fish + fastfetch in both shells.
 - Normal + `--dry-run` reinstall paths; rollback from manifest.
+
+## Approved extension — 2026-10-27
+
+Scope: kdeconnect, php, composer, php-sqlite, xdebug, ddev-bin, mkcert,
+Node.js/npm, Instrument Cluster, OmaConnect, and Orca only. No version pins.
+The historical live-first workflow above is not used for this extension:
+only repository files are changed, with isolated validation before the user
+chooses to run the installer.
+
+- `packages/keep.txt` is now executable input for `ensure-apps.sh`. Optional
+  `:latest` policy updates the approved additions; original entries retain
+  install-if-missing behavior. No automatic full-system/partial-sync upgrade.
+- `scripts/ensure-development.sh`: PHP extension drop-in, floating Mise Node,
+  existing Docker readiness, system CA trust, CLI verification. No Drupal or
+  DDEV project provisioning, no extra apps, browser extensions or themes.
+- `scripts/ensure-connectivity.sh`: only KDE Connect UFW port rules.
+- `scripts/ensure-plugins.sh`: current default-branch installs/updates of the
+  two approved plugins; backups for copied plugins; preserve unrelated shell
+  configuration using `scripts/setup-config.py`.
+- All three steps run after app installation in `install.sh` and support
+  read-only dry-run. The existing prune dry-run launcher deletion is guarded.
+- Validation: shell syntax, isolated PHP/shell config transforms, package
+  manager stubs, plugin validation failures/migration, and dry-run snapshots.
+  Installation against a fresh privileged Omarchy system remains a manual check.

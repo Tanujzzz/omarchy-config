@@ -1,4 +1,5 @@
-# Must-have + confirmed keeps. Format: "<repo>:<package>" (repo = pacman/official incl. omarchy repo, aur = yay)
+# Format: <source>:<package>[:latest]. Sources: repo (incl. Omarchy), aur (yay).
+# Existing entries install if missing; :latest also checks installed packages for updates.
 repo:kitty
 repo:fish
 repo:fastfetch
@@ -9,6 +10,15 @@ repo:vlc
 repo:hypridle
 aur:zen-browser-bin
 aur:visual-studio-code-bin
+# Approved additions: no version pins; latest candidate when the installer runs.
+repo:kdeconnect:latest
+repo:php:latest
+repo:composer:latest
+repo:php-sqlite:latest
+repo:xdebug:latest
+repo:mkcert:latest
+aur:ddev-bin:latest
+aur:orca-ide-bin:latest
 # Confirmed keeps (already in omarchy-base, listed to prevent pruning):
 # libreoffice-fresh, evince, obsidian, docker, docker-compose, lazydocker,
 # localsend, ufw, printing (cups), mise, lazygit, tmux, btop, fzf, ripgrep,

@@ -39,6 +39,66 @@ defaults, so `omarchy update` never overwrites them.
   `mpv-mpris`), obs-studio, kdenlive, pinta, xournalpp. Kept: libreoffice-fresh,
   evince, obsidian, docker stack, localsend, ufw, printing, all dev tools.
 
+### Approved additions (2026-10-27)
+
+The installer adds only the following items to the existing setup:
+
+| Item | Source | Basic configuration |
+|---|---|---|
+| KDE Connect | Official `kdeconnect` package | UFW TCP/UDP ports 1714–1764; pair devices manually |
+| PHP | Official `php` package | Enable bcmath, curl, iconv, intl, pdo_mysql and zip |
+| Composer | Official `composer` package | Verify CLI availability |
+| PHP SQLite | Official `php-sqlite` package | Enable pdo_sqlite |
+| Xdebug | Official `xdebug` package | Load extension and set debug mode |
+| DDEV | AUR `ddev-bin` | Verify executable, existing Docker/Compose and user access |
+| mkcert | Official `mkcert` package | Generate/reuse local CA and trust it in the system store |
+| Node.js and npm | Existing Omarchy Mise installation | Install/select floating `node@latest` globally |
+| Instrument Cluster | `Tanujzzz/omarchy-instrument-cluster-plugin` | Replace stock clock and set its center anchor |
+| OmaConnect | `jitendradara12/omaconnect` | Add its bar entry if absent |
+| Orca | AUR `orca-ide-bin` | Install the packaged app and desktop launcher |
+
+No versions are pinned. New package entries use the manifest format
+`<repo|aur>:<package>:latest`, which also checks installed packages for updates;
+existing two-field entries still install only if missing. Official packages
+resolve against the configured pacman sync database and AUR packages use yay.
+Start from an up-to-date Omarchy installation (`omarchy update`); this installer
+does not perform a system-wide upgrade or a partial `pacman -Sy` refresh.
+Node's explicit `@latest` request selects the latest release rather than merely
+reusing an older installed version, and `--fuzzy` keeps the global setting unpinned.
+Plugins clone the current upstream default branch and fast-forward on reruns;
+local edits or unexpected git origins stop the update instead of discarding work.
+
+`ensure-development.sh` writes only
+`/etc/php/conf.d/zz-omarchy-configuration.ini`, preserving `php.ini` and other
+drop-ins. It accounts for built-in/already declared extensions before adding
+load directives. Docker and Compose are existing Omarchy prerequisites: the
+script enables the Docker service and adds the current user to its group if
+needed. New group membership requires logging out and back in for normal shells.
+The script never runs `ddev config`, `ddev start`, Composer project installation,
+or any Drupal setup. No database, project or container is created.
+
+mkcert uses `TRUST_STORES=system`: browser profiles and extensions are not
+modified. The CA is generated per machine; private keys are not stored here.
+UFW creates IPv6 rules too when its existing IPv6 setting is enabled, and an
+inactive firewall is left inactive.
+
+`ensure-plugins.sh` preserves all other shell configuration. A non-git plugin
+copy is saved under
+`~/.local/state/omarchy-configuration/backups/plugins/` before migration;
+changed shell JSON gets a timestamped sibling backup. The JSON patch preserves
+the clock's formatting, existing OmaConnect settings/placement, bar position,
+other widgets, theme and idle settings. No other plugins are installed.
+
+Each new shell step accepts `--dry-run` or `DRY_RUN=1`. Preview the full existing
+installer using `bash install.sh --dry-run`. Run isolated checks without changing
+the live setup using `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v`.
+
+References: [DDEV installation](https://docs.ddev.com/en/stable/users/install/ddev-installation/),
+[mkcert trust stores](https://github.com/FiloSottile/mkcert#supported-root-stores),
+[Mise use](https://mise.jdx.dev/cli/use.html),
+[Instrument Cluster](https://github.com/Tanujzzz/omarchy-instrument-cluster-plugin),
+[OmaConnect](https://github.com/jitendradara12/omaconnect).
+
 ### Keybinds (`config/hypr/bindings.lua` → `~/.config/hypr/bindings.lua`)
 Update-safe overlay: `hl.unbind` defaults first, then `o.bind`. Validate with
 `hyprctl reload && hyprctl configerrors`.
